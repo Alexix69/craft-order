@@ -20,17 +20,17 @@ public class UsuarioRepositorioImpl implements IUsuarioRepositorio {
 
     @Override
     public Usuario guardar(Usuario usuario) {
-        return mapper.aDominio(jpaRepositorio.save(mapper.aEntity(usuario)));
+        return mapper.toDominio(jpaRepositorio.save(mapper.toEntity(usuario)));
     }
 
     @Override
     public Optional<Usuario> buscarPorId(Long id) {
-        return jpaRepositorio.findById(id).map(mapper::aDominio);
+        return jpaRepositorio.findById(id).map(mapper::toDominio);
     }
 
     @Override
     public List<Usuario> listarTodos() {
-        return jpaRepositorio.findAll().stream().map(mapper::aDominio).toList();
+        return jpaRepositorio.findAll().stream().map(mapper::toDominio).toList();
     }
 
     @Override
