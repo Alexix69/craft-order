@@ -1,4 +1,4 @@
-package com.muebleria.craftorder;
+package com.classic.craftorder;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.muebleria.craftorder;
+package com.classic.craftorder;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
