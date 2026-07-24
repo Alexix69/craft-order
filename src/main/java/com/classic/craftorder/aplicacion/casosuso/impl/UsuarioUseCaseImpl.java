@@ -27,6 +27,12 @@ public class UsuarioUseCaseImpl implements IUsuarioUseCase {
     }
 
     @Override
+    public Usuario buscarPorEmail(String email) {
+        return usuarioRepositorio.buscarPorEmail(email)
+                .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
+    }
+
+    @Override
     public List<Usuario> listarTodos() {
         return usuarioRepositorio.listarTodos();
     }
