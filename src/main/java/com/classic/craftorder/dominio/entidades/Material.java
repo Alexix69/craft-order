@@ -1,20 +1,18 @@
 package com.classic.craftorder.dominio.entidades;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-public class Usuario {
+public class Material {
 
     private Long id;
     private String nombre;
-    private String correo;
-    private String contrasena;
-    private String rol;
+    private BigDecimal precioPorM3;
     private Boolean activo;
-    private Boolean primerLogin;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
 
-    public Usuario() {
+    public Material() {
     }
 
     public Long getId() {
@@ -33,28 +31,12 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public String getCorreo() {
-        return correo;
+    public BigDecimal getPrecioPorM3() {
+        return precioPorM3;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getContrasena() {
-        return contrasena;
-    }
-
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setPrecioPorM3(BigDecimal precioPorM3) {
+        this.precioPorM3 = precioPorM3;
     }
 
     public Boolean getActivo() {
@@ -63,14 +45,6 @@ public class Usuario {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
-    }
-
-    public Boolean getPrimerLogin() {
-        return primerLogin;
-    }
-
-    public void setPrimerLogin(Boolean primerLogin) {
-        this.primerLogin = primerLogin;
     }
 
     public OffsetDateTime getCreatedAt() {

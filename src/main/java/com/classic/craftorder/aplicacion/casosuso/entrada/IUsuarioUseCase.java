@@ -10,7 +10,15 @@ public interface IUsuarioUseCase {
 
     Usuario buscarPorId(Long id);
 
-    List<Usuario> listarTodos();
+    Usuario buscarPorCorreo(String correo);
 
-    void eliminar(Long id);
+    List<Usuario> listarPorRol(String rol);
+
+    void desactivar(Long id);
+
+    void activar(Long id);
+
+    String resetearContrasena(Long id);
+
+    void cambiarContrasena(Long id, String contrasenaNueva);
 }

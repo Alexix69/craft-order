@@ -7,11 +7,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "material")
 @Data
-public class UsuarioEntity extends AuditoriaBase {
+@RequiredArgsConstructor
+public class MaterialEntity extends AuditoriaBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,18 +24,9 @@ public class UsuarioEntity extends AuditoriaBase {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false, unique = true)
-    private String correo;
-
     @Column(nullable = false)
-    private String contrasena;
-
-    @Column(nullable = false)
-    private String rol;
+    private BigDecimal precioPorM3;
 
     @Column(nullable = false)
     private Boolean activo;
-
-    @Column(nullable = false)
-    private Boolean primerLogin;
 }

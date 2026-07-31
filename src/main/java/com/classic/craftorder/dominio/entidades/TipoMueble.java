@@ -1,20 +1,20 @@
 package com.classic.craftorder.dominio.entidades;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-public class Usuario {
+public class TipoMueble {
 
     private Long id;
     private String nombre;
-    private String correo;
-    private String contrasena;
-    private String rol;
+    private String descripcion;
+    private String fotoUrl;
+    private BigDecimal costoBaseMo;
     private Boolean activo;
-    private Boolean primerLogin;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
 
-    public Usuario() {
+    public TipoMueble() {
     }
 
     public Long getId() {
@@ -33,28 +33,28 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setCorreo(String correo) {
-        this.correo = correo;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
-    public String getContrasena() {
-        return contrasena;
+    public String getFotoUrl() {
+        return fotoUrl;
     }
 
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
+    public void setFotoUrl(String fotoUrl) {
+        this.fotoUrl = fotoUrl;
     }
 
-    public String getRol() {
-        return rol;
+    public BigDecimal getCostoBaseMo() {
+        return costoBaseMo;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setCostoBaseMo(BigDecimal costoBaseMo) {
+        this.costoBaseMo = costoBaseMo;
     }
 
     public Boolean getActivo() {
@@ -63,14 +63,6 @@ public class Usuario {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
-    }
-
-    public Boolean getPrimerLogin() {
-        return primerLogin;
-    }
-
-    public void setPrimerLogin(Boolean primerLogin) {
-        this.primerLogin = primerLogin;
     }
 
     public OffsetDateTime getCreatedAt() {

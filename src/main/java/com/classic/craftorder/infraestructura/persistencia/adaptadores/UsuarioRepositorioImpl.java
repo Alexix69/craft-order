@@ -2,6 +2,7 @@ package com.classic.craftorder.infraestructura.persistencia.adaptadores;
 
 import com.classic.craftorder.dominio.entidades.Usuario;
 import com.classic.craftorder.dominio.repositorios.IUsuarioRepositorio;
+import com.classic.craftorder.infraestructura.persistencia.jpa.UsuarioEntity;
 import com.classic.craftorder.infraestructura.persistencia.mapeadores.IUsuarioJpaMapper;
 import com.classic.craftorder.infraestructura.repositorios.IUsuarioJpaRepositorio;
 
@@ -29,12 +30,37 @@ public class UsuarioRepositorioImpl implements IUsuarioRepositorio {
     }
 
     @Override
-    public List<Usuario> listarTodos() {
-        return jpaRepositorio.findAll().stream().map(mapper::toDominio).toList();
+    public Optional<Usuario> buscarPorCorreo(String correo) {
+        return jpaRepositorio.findByCorreo(correo).map(mapper::toDominio);
     }
 
     @Override
-    public void eliminar(Long id) {
-        jpaRepositorio.deleteById(id);
+    public List<Usuario> listarPorRol(String rol) {
+        return jpaRepositorio.findByRol(rol).stream().map(mapper::toDominio).toList();
+    }
+
+    @Override
+    public void desactivar(Long id) {
+        UsuarioEntity entity = jpaRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+        entity.setActivo(false);
+        jpaRepositorio.save(entity);
+    }
+
+    @Override
+    public void activar(Long id) {
+        UsuarioEntity entity = jpaRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+        entity.setActivo(true);
+        jpaRepositorio.save(entity);
+    }
+
+    @Override
+    public void resetearContrasena(Long id, String contrasenaNuevaHash) {
+        UsuarioEntity entity = jpaRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+        entity.setContrasena(contrasenaNuevaHash);
+        entity.setPrimerLogin(true);
+        jpaRepositorio.save(entity);
     }
 }

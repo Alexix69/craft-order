@@ -11,7 +11,13 @@ public interface IUsuarioRepositorio {
 
     Optional<Usuario> buscarPorId(Long id);
 
-    List<Usuario> listarTodos();
+    Optional<Usuario> buscarPorCorreo(String correo);
 
-    void eliminar(Long id);
+    List<Usuario> listarPorRol(String rol);
+
+    void desactivar(Long id);
+
+    void activar(Long id);
+
+    void resetearContrasena(Long id, String contrasenaNuevaHash);
 }
