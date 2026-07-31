@@ -7,12 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Entity
 @Table(name = "usuario")
 @Data
-@RequiredArgsConstructor
 public class UsuarioEntity extends AuditoriaBase {
 
     @Id
@@ -23,15 +21,17 @@ public class UsuarioEntity extends AuditoriaBase {
     private String nombre;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String correo;
 
     @Column(nullable = false)
-    private String passwordHash;
+    private String contrasena;
 
     @Column(nullable = false)
     private String rol;
 
-    // TODO: descomentar cuando OrdenProduccionEntity exista
-    // @OneToMany(mappedBy = "fkUsuarioEntity")
-    // private List<OrdenProduccionEntity> ordenesProduccion = new ArrayList<>();
+    @Column(nullable = false)
+    private Boolean activo;
+
+    @Column(nullable = false)
+    private Boolean primerLogin;
 }

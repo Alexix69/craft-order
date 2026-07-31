@@ -9,7 +9,8 @@ public class UsuarioResponseDto {
 
     private Long id;
     private String nombre;
-    private String email;
+    private String correo;
     private String rol;
+    private Boolean activo;
     private OffsetDateTime createdAt;
 }

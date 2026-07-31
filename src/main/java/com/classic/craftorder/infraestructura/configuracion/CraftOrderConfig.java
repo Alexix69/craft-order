@@ -20,9 +20,15 @@ import com.classic.craftorder.infraestructura.repositorios.ITipoMuebleJpaReposit
 import com.classic.craftorder.infraestructura.repositorios.IUsuarioJpaRepositorio;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class CraftOrderConfig {
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public IUsuarioRepositorio usuarioRepositorio(IUsuarioJpaRepositorio jpaRepositorio,
@@ -31,8 +37,8 @@ public class CraftOrderConfig {
     }
 
     @Bean
-    public IUsuarioUseCase usuarioUseCase(IUsuarioRepositorio repositorio) {
-        return new UsuarioUseCaseImpl(repositorio);
+    public IUsuarioUseCase usuarioUseCase(IUsuarioRepositorio repositorio, BCryptPasswordEncoder encoder) {
+        return new UsuarioUseCaseImpl(repositorio, encoder);
     }
 
     @Bean
