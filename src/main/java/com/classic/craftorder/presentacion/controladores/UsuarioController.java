@@ -1,12 +1,15 @@
 package com.classic.craftorder.presentacion.controladores;
 
 import com.classic.craftorder.aplicacion.casosuso.entrada.IUsuarioUseCase;
+import com.classic.craftorder.dominio.PaginaResultado;
 import com.classic.craftorder.dominio.entidades.Usuario;
 import com.classic.craftorder.presentacion.dto.request.CambiarContrasenaRequestDto;
 import com.classic.craftorder.presentacion.dto.request.UsuarioRequestDto;
 import com.classic.craftorder.presentacion.dto.response.ContrasenaTemporalResponseDto;
+import com.classic.craftorder.presentacion.dto.response.PaginaResponseDto;
 import com.classic.craftorder.presentacion.dto.response.UsuarioResponseDto;
 import com.classic.craftorder.presentacion.mapeadores.IUsuarioDtoMapper;
+import com.classic.craftorder.presentacion.mapeadores.PaginaMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -41,8 +42,16 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public List<UsuarioResponseDto> listarPorRol(@RequestParam String rol) {
-        return usuarioUseCase.listarPorRol(rol).stream().map(mapper::toResponse).toList();
+    public ResponseEntity<PaginaResponseDto<UsuarioResponseDto>> listarPorRol(
+            @RequestParam String rol,
+            @RequestParam(defaultValue = "") String busqueda,
+            @RequestParam(defaultValue = "") String campoBusqueda,
+            @RequestParam(required = false) Boolean activo,
+            @RequestParam(defaultValue = "0") int page) {
+        PaginaResultado<Usuario> resultado =
+                usuarioUseCase.listarArtesanosPaginado(busqueda, campoBusqueda, activo, page);
+        return ResponseEntity.ok(
+                PaginaMapper.toResponse(resultado, mapper::toResponse));
     }
 
     @PostMapping("/{id}/desactivar")

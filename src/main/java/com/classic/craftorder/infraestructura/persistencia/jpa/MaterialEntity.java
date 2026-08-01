@@ -6,13 +6,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "material")
+@Table(name = "material", uniqueConstraints = {
+    @UniqueConstraint(name = "uk_material_nombre", columnNames = "nombre")
+})
 @Data
 @RequiredArgsConstructor
 public class MaterialEntity extends AuditoriaBase {

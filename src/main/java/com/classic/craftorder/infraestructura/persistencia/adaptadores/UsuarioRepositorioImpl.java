@@ -1,13 +1,19 @@
 package com.classic.craftorder.infraestructura.persistencia.adaptadores;
 
+import com.classic.craftorder.dominio.PaginaResultado;
 import com.classic.craftorder.dominio.entidades.Usuario;
 import com.classic.craftorder.dominio.repositorios.IUsuarioRepositorio;
 import com.classic.craftorder.infraestructura.persistencia.jpa.UsuarioEntity;
 import com.classic.craftorder.infraestructura.persistencia.mapeadores.IUsuarioJpaMapper;
 import com.classic.craftorder.infraestructura.repositorios.IUsuarioJpaRepositorio;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class UsuarioRepositorioImpl implements IUsuarioRepositorio {
 
@@ -62,5 +68,34 @@ public class UsuarioRepositorioImpl implements IUsuarioRepositorio {
         entity.setContrasena(contrasenaNuevaHash);
         entity.setPrimerLogin(true);
         jpaRepositorio.save(entity);
+    }
+
+    @Override
+    public PaginaResultado<Usuario> listarPorRolPaginado(
+            String rol, String busqueda, String campoBusqueda,
+            Boolean activo, int pagina, int tamanio) {
+
+        Pageable pageable = PageRequest.of(
+            pagina, tamanio, Sort.by("nombre").ascending());
+
+        String busquedaNorm = (busqueda != null && !busqueda.isBlank())
+            ? busqueda : null;
+        String campoNorm = busquedaNorm != null ? campoBusqueda : null;
+
+        Page<UsuarioEntity> page = jpaRepositorio.buscarPorFiltros(
+            rol, busquedaNorm, campoNorm, activo, pageable);
+
+        return toPagina(page, mapper::toDominio);
+    }
+
+    private <E, D> PaginaResultado<D> toPagina(Page<E> page, Function<E, D> mapper) {
+        PaginaResultado<D> resultado = new PaginaResultado<>();
+        resultado.setContenido(page.getContent().stream().map(mapper).toList());
+        resultado.setPaginaActual(page.getNumber());
+        resultado.setTotalPaginas(page.getTotalPages());
+        resultado.setTotalElementos(page.getTotalElements());
+        resultado.setEsPrimera(page.isFirst());
+        resultado.setEsUltima(page.isLast());
+        return resultado;
     }
 }

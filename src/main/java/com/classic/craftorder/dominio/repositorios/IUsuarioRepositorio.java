@@ -1,5 +1,6 @@
 package com.classic.craftorder.dominio.repositorios;
 
+import com.classic.craftorder.dominio.PaginaResultado;
 import com.classic.craftorder.dominio.entidades.Usuario;
 
 import java.util.List;
@@ -20,4 +21,8 @@ public interface IUsuarioRepositorio {
     void activar(Long id);
 
     void resetearContrasena(Long id, String contrasenaNuevaHash);
+
+    PaginaResultado<Usuario> listarPorRolPaginado(
+            String rol, String busqueda, String campoBusqueda,
+            Boolean activo, int pagina, int tamanio);
 }
