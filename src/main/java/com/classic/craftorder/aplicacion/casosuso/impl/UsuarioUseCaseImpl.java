@@ -1,6 +1,7 @@
 package com.classic.craftorder.aplicacion.casosuso.impl;
 
 import com.classic.craftorder.aplicacion.casosuso.entrada.IUsuarioUseCase;
+import com.classic.craftorder.dominio.PaginaResultado;
 import com.classic.craftorder.dominio.entidades.Usuario;
 import com.classic.craftorder.dominio.repositorios.IUsuarioRepositorio;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +11,8 @@ import java.util.List;
 
 public class UsuarioUseCaseImpl implements IUsuarioUseCase {
 
+    private static final int TAMANIO_PAGINA = 20;
+    private static final String ROL_ARTESANO = "ARTESANO";
     private static final String LETRAS_MINUSCULAS = "abcdefghijklmnopqrstuvwxyz";
     private static final String LETRAS_MAYUSCULAS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String DIGITOS = "0123456789";
@@ -77,6 +80,13 @@ public class UsuarioUseCaseImpl implements IUsuarioUseCase {
         usuario.setContrasena(encoder.encode(contrasenaNueva));
         usuario.setPrimerLogin(false);
         usuarioRepositorio.guardar(usuario);
+    }
+
+    @Override
+    public PaginaResultado<Usuario> listarArtesanosPaginado(
+            String busqueda, String campoBusqueda, Boolean activo, int pagina) {
+        return usuarioRepositorio.listarPorRolPaginado(
+                ROL_ARTESANO, busqueda, campoBusqueda, activo, pagina, TAMANIO_PAGINA);
     }
 
     private String generarContrasenaTemporal() {

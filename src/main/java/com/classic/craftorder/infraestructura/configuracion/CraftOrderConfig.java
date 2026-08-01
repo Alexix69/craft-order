@@ -1,21 +1,27 @@
 package com.classic.craftorder.infraestructura.configuracion;
 
 import com.classic.craftorder.aplicacion.casosuso.entrada.IMaterialUseCase;
+import com.classic.craftorder.aplicacion.casosuso.entrada.ITipoAcabadoUseCase;
 import com.classic.craftorder.aplicacion.casosuso.entrada.ITipoMuebleUseCase;
 import com.classic.craftorder.aplicacion.casosuso.entrada.IUsuarioUseCase;
 import com.classic.craftorder.aplicacion.casosuso.impl.MaterialUseCaseImpl;
+import com.classic.craftorder.aplicacion.casosuso.impl.TipoAcabadoUseCaseImpl;
 import com.classic.craftorder.aplicacion.casosuso.impl.TipoMuebleUseCaseImpl;
 import com.classic.craftorder.aplicacion.casosuso.impl.UsuarioUseCaseImpl;
 import com.classic.craftorder.dominio.repositorios.IMaterialRepositorio;
+import com.classic.craftorder.dominio.repositorios.ITipoAcabadoRepositorio;
 import com.classic.craftorder.dominio.repositorios.ITipoMuebleRepositorio;
 import com.classic.craftorder.dominio.repositorios.IUsuarioRepositorio;
 import com.classic.craftorder.infraestructura.persistencia.adaptadores.MaterialRepositorioImpl;
+import com.classic.craftorder.infraestructura.persistencia.adaptadores.TipoAcabadoRepositorioImpl;
 import com.classic.craftorder.infraestructura.persistencia.adaptadores.TipoMuebleRepositorioImpl;
 import com.classic.craftorder.infraestructura.persistencia.adaptadores.UsuarioRepositorioImpl;
 import com.classic.craftorder.infraestructura.persistencia.mapeadores.IMaterialJpaMapper;
+import com.classic.craftorder.infraestructura.persistencia.mapeadores.ITipoAcabadoJpaMapper;
 import com.classic.craftorder.infraestructura.persistencia.mapeadores.ITipoMuebleJpaMapper;
 import com.classic.craftorder.infraestructura.persistencia.mapeadores.IUsuarioJpaMapper;
 import com.classic.craftorder.infraestructura.repositorios.IMaterialJpaRepositorio;
+import com.classic.craftorder.infraestructura.repositorios.ITipoAcabadoJpaRepositorio;
 import com.classic.craftorder.infraestructura.repositorios.ITipoMuebleJpaRepositorio;
 import com.classic.craftorder.infraestructura.repositorios.IUsuarioJpaRepositorio;
 import org.springframework.context.annotation.Bean;
@@ -61,5 +67,16 @@ public class CraftOrderConfig {
     @Bean
     public IMaterialUseCase materialUseCase(IMaterialRepositorio repositorio) {
         return new MaterialUseCaseImpl(repositorio);
+    }
+
+    @Bean
+    public ITipoAcabadoRepositorio tipoAcabadoRepositorio(ITipoAcabadoJpaRepositorio jpaRepositorio,
+                                                           ITipoAcabadoJpaMapper mapper) {
+        return new TipoAcabadoRepositorioImpl(jpaRepositorio, mapper);
+    }
+
+    @Bean
+    public ITipoAcabadoUseCase tipoAcabadoUseCase(ITipoAcabadoRepositorio repositorio) {
+        return new TipoAcabadoUseCaseImpl(repositorio);
     }
 }

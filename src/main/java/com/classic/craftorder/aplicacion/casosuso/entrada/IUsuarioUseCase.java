@@ -1,5 +1,6 @@
 package com.classic.craftorder.aplicacion.casosuso.entrada;
 
+import com.classic.craftorder.dominio.PaginaResultado;
 import com.classic.craftorder.dominio.entidades.Usuario;
 
 import java.util.List;
@@ -21,4 +22,7 @@ public interface IUsuarioUseCase {
     String resetearContrasena(Long id);
 
     void cambiarContrasena(Long id, String contrasenaNueva);
+
+    PaginaResultado<Usuario> listarArtesanosPaginado(
+            String busqueda, String campoBusqueda, Boolean activo, int pagina);
 }
