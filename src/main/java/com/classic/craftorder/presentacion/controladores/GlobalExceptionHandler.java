@@ -23,12 +23,34 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponseDto> manejarIntegridad(DataIntegrityViolationException ex) {
+    public ResponseEntity<ErrorResponseDto> manejarIntegridad(
+            DataIntegrityViolationException ex) {
+
+        String causa = ex.getMostSpecificCause().getMessage();
         ErrorResponseDto error = new ErrorResponseDto();
-        error.setMensaje("El correo ya está registrado");
         error.setCodigo(HttpStatus.CONFLICT.name());
-        error.setCampo("correo");
+
+        String campo = extraerCampoDeConstraint(causa);
+        if (campo != null) {
+            error.setCampo(campo);
+            error.setMensaje("El valor del campo '" + campo + "' ya está registrado");
+        } else {
+            error.setMensaje("El registro ya existe");
+            error.setCampo(null);
+        }
+
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    private String extraerCampoDeConstraint(String mensaje) {
+        if (mensaje == null) return null;
+        java.util.regex.Matcher m = java.util.regex.Pattern
+            .compile("\"(uk_[^\"]+)\"")
+            .matcher(mensaje);
+        if (!m.find()) return null;
+        String nombreConstraint = m.group(1);
+        int ultimoGuion = nombreConstraint.lastIndexOf('_');
+        return ultimoGuion >= 0 ? nombreConstraint.substring(ultimoGuion + 1) : null;
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -8,32 +8,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "tipo_mueble", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_tipo_mueble_nombre", columnNames = "nombre")
+@Table(name = "tipo_acabado", uniqueConstraints = {
+    @UniqueConstraint(name = "uk_tipo_acabado_tipo", columnNames = "tipo")
 })
 @Data
-@RequiredArgsConstructor
-public class TipoMuebleEntity extends AuditoriaBase {
+public class TipoAcabadoEntity extends AuditoriaBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String nombre;
-
-    private String descripcion;
-
-    private String fotoUrl;
+    private String tipo;
 
     @Column(nullable = false)
-    private BigDecimal costoBaseMo;
-
-    @Column(nullable = false)
-    private Boolean activo;
+    private BigDecimal porcentaje;
 }
