@@ -1,6 +1,7 @@
 package com.classic.craftorder.infraestructura.configuracion;
 
 import com.classic.craftorder.aplicacion.casosuso.entrada.ICotizacionUseCase;
+import com.classic.craftorder.aplicacion.servicios.CorreoService;
 import com.classic.craftorder.aplicacion.casosuso.entrada.IMaterialUseCase;
 import com.classic.craftorder.aplicacion.casosuso.entrada.ITipoAcabadoUseCase;
 import com.classic.craftorder.aplicacion.casosuso.entrada.ITipoMuebleUseCase;
@@ -98,11 +99,13 @@ public class CraftOrderConfig {
             ICotizacionRepositorio cotizacionRepositorio,
             ITipoMuebleRepositorio tipoMuebleRepositorio,
             IMaterialRepositorio materialRepositorio,
-            ITipoAcabadoRepositorio tipoAcabadoRepositorio) {
+            ITipoAcabadoRepositorio tipoAcabadoRepositorio,
+            CorreoService correoService) {
         return new CotizacionUseCaseImpl(
                 cotizacionRepositorio,
                 tipoMuebleRepositorio,
                 materialRepositorio,
-                tipoAcabadoRepositorio);
+                tipoAcabadoRepositorio,
+                correoService);
     }
 }
