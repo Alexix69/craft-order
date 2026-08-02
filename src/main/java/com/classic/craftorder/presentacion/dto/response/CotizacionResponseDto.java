@@ -13,7 +13,9 @@ public class CotizacionResponseDto {
     private String correoCliente;
     private String telefonoCliente;
     private Long tipoMuebleId;
+    private String tipoMuebleNombre;
     private Long materialId;
+    private String materialNombre;
     private String tipoAcabado;
     private BigDecimal altoCm;
     private BigDecimal anchoCm;
@@ -24,6 +26,7 @@ public class CotizacionResponseDto {
     private BigDecimal costoEstimado;
     private BigDecimal costoAprobado;
     private String estado;
+    private String motivoRechazo;
     private String token;
     private OffsetDateTime createdAt;
 }
