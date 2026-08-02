@@ -1,6 +1,7 @@
 package com.classic.craftorder.aplicacion.casosuso.impl;
 
 import com.classic.craftorder.aplicacion.casosuso.entrada.ICotizacionUseCase;
+import com.classic.craftorder.aplicacion.servicios.CorreoService;
 import com.classic.craftorder.dominio.PaginaResultado;
 import com.classic.craftorder.dominio.entidades.Cotizacion;
 import com.classic.craftorder.dominio.entidades.Material;
@@ -24,15 +25,18 @@ public class CotizacionUseCaseImpl implements ICotizacionUseCase {
     private final ITipoMuebleRepositorio tipoMuebleRepositorio;
     private final IMaterialRepositorio materialRepositorio;
     private final ITipoAcabadoRepositorio tipoAcabadoRepositorio;
+    private final CorreoService correoService;
 
     public CotizacionUseCaseImpl(ICotizacionRepositorio cotizacionRepositorio,
                                   ITipoMuebleRepositorio tipoMuebleRepositorio,
                                   IMaterialRepositorio materialRepositorio,
-                                  ITipoAcabadoRepositorio tipoAcabadoRepositorio) {
+                                  ITipoAcabadoRepositorio tipoAcabadoRepositorio,
+                                  CorreoService correoService) {
         this.cotizacionRepositorio = cotizacionRepositorio;
         this.tipoMuebleRepositorio = tipoMuebleRepositorio;
         this.materialRepositorio = materialRepositorio;
         this.tipoAcabadoRepositorio = tipoAcabadoRepositorio;
+        this.correoService = correoService;
     }
 
     @Override
@@ -101,5 +105,73 @@ public class CotizacionUseCaseImpl implements ICotizacionUseCase {
     public PaginaResultado<Cotizacion> listarPorEstadoPaginado(String estado, int pagina) {
         return cotizacionRepositorio
                 .listarPorEstadoPaginado(estado, pagina, TAMANIO_PAGINA);
+    }
+
+    @Override
+    public Cotizacion aprobar(Long id, BigDecimal costoAprobado) {
+        Cotizacion cotizacion = buscarPorId(id);
+
+        if (!"PENDIENTE".equals(cotizacion.getEstado())) {
+            throw new RuntimeException("Solo se pueden aprobar cotizaciones pendientes");
+        }
+
+        cotizacion.setEstado("APROBADA");
+        cotizacion.setCostoAprobado(costoAprobado);
+        Cotizacion actualizada = cotizacionRepositorio.guardar(cotizacion);
+
+        correoService.enviarAprobacion(
+                actualizada.getCorreoCliente(),
+                actualizada.getNombreCliente(),
+                actualizada.getCostoAprobado(),
+                actualizada.getToken());
+
+        return actualizada;
+    }
+
+    @Override
+    public Cotizacion rechazar(Long id, String motivoRechazo) {
+        Cotizacion cotizacion = buscarPorId(id);
+
+        if (!"PENDIENTE".equals(cotizacion.getEstado())) {
+            throw new RuntimeException("Solo se pueden rechazar cotizaciones pendientes");
+        }
+
+        cotizacion.setEstado("RECHAZADA");
+        cotizacion.setMotivoRechazo(motivoRechazo);
+        Cotizacion actualizada = cotizacionRepositorio.guardar(cotizacion);
+
+        correoService.enviarRechazo(
+                actualizada.getCorreoCliente(),
+                actualizada.getNombreCliente(),
+                actualizada.getMotivoRechazo(),
+                actualizada.getToken());
+
+        return actualizada;
+    }
+
+    @Override
+    public Cotizacion pagar(String token) {
+        Cotizacion cotizacion = cotizacionRepositorio.buscarPorToken(token)
+                .orElseThrow(() -> new RuntimeException("Cotización no encontrada"));
+
+        if (!"APROBADA".equals(cotizacion.getEstado())) {
+            throw new RuntimeException("ESTADO:" + cotizacion.getEstado());
+        }
+
+        cotizacion.setEstado("PAGADA");
+        Cotizacion actualizada = cotizacionRepositorio.guardar(cotizacion);
+
+        correoService.enviarConfirmacionPago(
+                actualizada.getCorreoCliente(),
+                actualizada.getNombreCliente(),
+                actualizada.getToken());
+
+        return actualizada;
+    }
+
+    @Override
+    public Cotizacion buscarPorId(Long id) {
+        return cotizacionRepositorio.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Cotización no encontrada"));
     }
 }
