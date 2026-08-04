@@ -6,9 +6,11 @@ public class Usuario {
 
     private Long id;
     private String nombre;
-    private String email;
-    private String passwordHash;
+    private String correo;
+    private String contrasena;
     private String rol;
+    private Boolean activo;
+    private Boolean primerLogin;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
 
@@ -31,20 +33,20 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public String getEmail() {
-        return email;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getContrasena() {
+        return contrasena;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public String getRol() {
@@ -53,6 +55,22 @@ public class Usuario {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public Boolean getPrimerLogin() {
+        return primerLogin;
+    }
+
+    public void setPrimerLogin(Boolean primerLogin) {
+        this.primerLogin = primerLogin;
     }
 
     public OffsetDateTime getCreatedAt() {
