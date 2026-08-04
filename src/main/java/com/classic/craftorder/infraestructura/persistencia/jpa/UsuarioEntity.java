@@ -6,10 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "usuario", uniqueConstraints = {
+    @UniqueConstraint(name = "uk_usuario_correo", columnNames = "correo")
+})
 @Data
 public class UsuarioEntity extends AuditoriaBase {
 
@@ -20,7 +23,7 @@ public class UsuarioEntity extends AuditoriaBase {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String correo;
 
     @Column(nullable = false)
