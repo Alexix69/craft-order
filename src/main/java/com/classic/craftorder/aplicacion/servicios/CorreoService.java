@@ -1,11 +1,13 @@
 package com.classic.craftorder.aplicacion.servicios;
 
 import com.resend.Resend;
+import com.resend.services.emails.model.Attachment;
 import com.resend.services.emails.model.CreateEmailOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Base64;
 
 @Component
 public class CorreoService {
@@ -109,19 +111,46 @@ public class CorreoService {
 
     /**
      * Artesano marca LISTO_ENTREGA — mueble listo para retirar.
+     * Adjunta la factura en PDF cuando está disponible.
      */
-    public void enviarListoEntrega(String correo, String nombre, String token) {
+    public void enviarListoEntrega(String correo, String nombre, String token,
+                                    byte[] pdfBytes, String numeroFactura) {
         String linkSeguimiento = appBaseUrl + "/seguimiento/" + token;
+        String parrafoAdjunto = pdfBytes != null
+            ? "<p>Adjuntamos tu factura <strong>" + numeroFactura
+                + "</strong> a este correo.</p>"
+            : "";
         String html = """
             <h2>¡Tu mueble está listo!</h2>
             <p>Hola %s,</p>
             <p>Tu mueble ha pasado el control de calidad y está listo
                para ser retirado en nuestro taller.</p>
+            %s
             <p>Consulta los detalles de tu orden aquí:<br>
                <a href="%s">%s</a></p>
             <p>¡Gracias por confiar en Classic Mueblería!</p>
-            """.formatted(nombre, linkSeguimiento, linkSeguimiento);
-        enviar(correo, "Tu mueble está listo para retirar — Classic Mueblería", html);
+            """.formatted(nombre, parrafoAdjunto, linkSeguimiento, linkSeguimiento);
+
+        try {
+            CreateEmailOptions.Builder builder = CreateEmailOptions.builder()
+                .from(from)
+                .to(correo)
+                .subject("Tu mueble está listo para retirar — Classic Mueblería")
+                .html(html);
+
+            if (pdfBytes != null) {
+                Attachment attachment = Attachment.builder()
+                    .fileName(numeroFactura + ".pdf")
+                    .content(Base64.getEncoder().encodeToString(pdfBytes))
+                    .build();
+                builder.attachments(attachment);
+            }
+
+            resend.emails().send(builder.build());
+        } catch (Exception e) {
+            System.err.println("[CorreoService] Error al enviar correo a "
+                + correo + ": " + e.getMessage());
+        }
     }
 
     private void enviar(String to, String subject, String html) {

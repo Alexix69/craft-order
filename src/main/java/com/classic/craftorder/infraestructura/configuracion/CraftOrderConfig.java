@@ -2,6 +2,7 @@ package com.classic.craftorder.infraestructura.configuracion;
 
 import com.classic.craftorder.aplicacion.casosuso.entrada.ICotizacionUseCase;
 import com.classic.craftorder.aplicacion.casosuso.entrada.IOrdenProduccionUseCase;
+import com.classic.craftorder.aplicacion.servicios.ArchivoService;
 import com.classic.craftorder.aplicacion.servicios.CorreoService;
 import com.classic.craftorder.aplicacion.servicios.FacturaPdfService;
 import com.classic.craftorder.aplicacion.casosuso.entrada.IMaterialUseCase;
@@ -159,7 +160,8 @@ public class CraftOrderConfig {
             IMaterialRepositorio materialRepositorio,
             IUsuarioRepositorio usuarioRepositorio,
             FacturaPdfService facturaPdfService,
-            CorreoService correoService) {
+            CorreoService correoService,
+            ArchivoService archivoService) {
         return new OrdenProduccionUseCaseImpl(
                 ordenRepositorio,
                 historialRepositorio,
@@ -169,6 +171,7 @@ public class CraftOrderConfig {
                 materialRepositorio,
                 usuarioRepositorio,
                 facturaPdfService,
-                correoService);
+                correoService,
+                archivoService);
     }
 }

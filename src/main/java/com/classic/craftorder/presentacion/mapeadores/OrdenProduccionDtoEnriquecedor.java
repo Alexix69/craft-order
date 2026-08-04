@@ -50,6 +50,9 @@ public class OrdenProduccionDtoEnriquecedor {
         try {
             Cotizacion cotizacion = cotizacionUseCase.buscarPorId(orden.getCotizacionId());
             dto.setNombreCliente(cotizacion.getNombreCliente());
+            dto.setCorreoCliente(cotizacion.getCorreoCliente());
+            dto.setTelefonoCliente(cotizacion.getTelefonoCliente());
+            dto.setCostoAprobado(cotizacion.getCostoAprobado());
             dto.setTipoAcabado(cotizacion.getTipoAcabado());
             dto.setAltoCm(cotizacion.getAltoCm());
             dto.setAnchoCm(cotizacion.getAnchoCm());
