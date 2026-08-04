@@ -29,6 +29,11 @@ public class UsuarioRepositorioImpl implements IUsuarioRepositorio {
     }
 
     @Override
+    public Optional<Usuario> buscarPorEmail(String email) {
+        return jpaRepositorio.findByEmail(email).map(mapper::toDominio);
+    }
+
+    @Override
     public List<Usuario> listarTodos() {
         return jpaRepositorio.findAll().stream().map(mapper::toDominio).toList();
     }
