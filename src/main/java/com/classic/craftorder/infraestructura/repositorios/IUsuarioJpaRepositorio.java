@@ -22,9 +22,9 @@ public interface IUsuarioJpaRepositorio extends JpaRepository<UsuarioEntity, Lon
         AND (
             :busqueda IS NULL
             OR (:campoBusqueda = 'nombre'
-                AND LOWER(u.nombre) LIKE LOWER(CONCAT('%', :busqueda, '%')))
+                AND LOWER(u.nombre) LIKE LOWER(CONCAT('%', CAST(:busqueda AS string), '%')))
             OR (:campoBusqueda = 'correo'
-                AND LOWER(u.correo) LIKE LOWER(CONCAT('%', :busqueda, '%')))
+                AND LOWER(u.correo) LIKE LOWER(CONCAT('%', CAST(:busqueda AS string), '%')))
         )
         AND (:activo IS NULL OR u.activo = :activo)
         """)
