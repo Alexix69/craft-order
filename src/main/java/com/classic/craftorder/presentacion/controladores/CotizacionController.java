@@ -3,9 +3,12 @@ package com.classic.craftorder.presentacion.controladores;
 import com.classic.craftorder.aplicacion.casosuso.entrada.ICotizacionUseCase;
 import com.classic.craftorder.dominio.PaginaResultado;
 import com.classic.craftorder.dominio.entidades.Cotizacion;
+import com.classic.craftorder.presentacion.dto.request.AprobacionRequestDto;
 import com.classic.craftorder.presentacion.dto.request.CotizacionRequestDto;
+import com.classic.craftorder.presentacion.dto.request.RechazoRequestDto;
 import com.classic.craftorder.presentacion.dto.response.CotizacionResponseDto;
 import com.classic.craftorder.presentacion.dto.response.PaginaResponseDto;
+import com.classic.craftorder.presentacion.mapeadores.CotizacionDtoEnriquecedor;
 import com.classic.craftorder.presentacion.mapeadores.ICotizacionDtoMapper;
 import com.classic.craftorder.presentacion.mapeadores.PaginaMapper;
 import jakarta.validation.Valid;
@@ -27,13 +30,14 @@ public class CotizacionController {
 
     private final ICotizacionUseCase cotizacionUseCase;
     private final ICotizacionDtoMapper dtoMapper;
+    private final CotizacionDtoEnriquecedor enriquecedor;
 
     @PostMapping("/calcular")
     public ResponseEntity<CotizacionResponseDto> calcular(
             @Valid @RequestBody CotizacionRequestDto dto) {
         Cotizacion cotizacion = dtoMapper.toDominio(dto);
         Cotizacion calculada = cotizacionUseCase.calcularYPreparar(cotizacion);
-        return ResponseEntity.ok(dtoMapper.toResponse(calculada));
+        return ResponseEntity.ok(enriquecedor.toResponse(calculada));
     }
 
     @PostMapping
@@ -43,14 +47,14 @@ public class CotizacionController {
         Cotizacion calculada = cotizacionUseCase.calcularYPreparar(cotizacion);
         Cotizacion confirmada = cotizacionUseCase.confirmar(calculada);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(dtoMapper.toResponse(confirmada));
+                .body(enriquecedor.toResponse(confirmada));
     }
 
     @GetMapping("/seguimiento/{token}")
     public ResponseEntity<CotizacionResponseDto> seguimiento(
             @PathVariable String token) {
         return ResponseEntity.ok(
-                dtoMapper.toResponse(cotizacionUseCase.buscarPorToken(token)));
+                enriquecedor.toResponse(cotizacionUseCase.buscarPorToken(token)));
     }
 
     @GetMapping
@@ -60,6 +64,36 @@ public class CotizacionController {
         PaginaResultado<Cotizacion> resultado =
                 cotizacionUseCase.listarPorEstadoPaginado(estado, page);
         return ResponseEntity.ok(
-                PaginaMapper.toResponse(resultado, dtoMapper::toResponse));
+                PaginaMapper.toResponse(resultado, enriquecedor::toResponse));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CotizacionResponseDto> buscarPorId(
+            @PathVariable Long id) {
+        return ResponseEntity.ok(
+                enriquecedor.toResponse(cotizacionUseCase.buscarPorId(id)));
+    }
+
+    @PostMapping("/{id}/aprobar")
+    public ResponseEntity<CotizacionResponseDto> aprobar(
+            @PathVariable Long id,
+            @Valid @RequestBody AprobacionRequestDto dto) {
+        return ResponseEntity.ok(
+                enriquecedor.toResponse(cotizacionUseCase.aprobar(id, dto.getCostoAprobado())));
+    }
+
+    @PostMapping("/{id}/rechazar")
+    public ResponseEntity<CotizacionResponseDto> rechazar(
+            @PathVariable Long id,
+            @Valid @RequestBody RechazoRequestDto dto) {
+        return ResponseEntity.ok(
+                enriquecedor.toResponse(cotizacionUseCase.rechazar(id, dto.getMotivoRechazo())));
+    }
+
+    @PostMapping("/pagar/{token}")
+    public ResponseEntity<CotizacionResponseDto> pagar(
+            @PathVariable String token) {
+        return ResponseEntity.ok(
+                enriquecedor.toResponse(cotizacionUseCase.pagar(token)));
     }
 }
