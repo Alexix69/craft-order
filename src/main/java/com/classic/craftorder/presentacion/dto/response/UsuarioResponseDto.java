@@ -1,21 +1,15 @@
 package com.classic.craftorder.presentacion.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class UsuarioResponseDto {
 
     private Long id;
     private String nombre;
     private String email;
     private String rol;
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 }

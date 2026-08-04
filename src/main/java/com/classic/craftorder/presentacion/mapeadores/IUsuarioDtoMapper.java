@@ -5,10 +5,10 @@ import com.classic.craftorder.presentacion.dto.request.UsuarioRequestDto;
 import com.classic.craftorder.presentacion.dto.response.UsuarioResponseDto;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface IUsuarioDtoMapper {
 
-    Usuario aDominio(UsuarioRequestDto requestDto);
+    Usuario toDominio(UsuarioRequestDto requestDto);
 
-    UsuarioResponseDto aResponseDto(Usuario dominio);
+    UsuarioResponseDto toResponse(Usuario dominio);
 }

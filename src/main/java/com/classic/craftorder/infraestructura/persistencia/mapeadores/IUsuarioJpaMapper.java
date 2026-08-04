@@ -4,10 +4,10 @@ import com.classic.craftorder.dominio.entidades.Usuario;
 import com.classic.craftorder.infraestructura.persistencia.jpa.UsuarioEntity;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface IUsuarioJpaMapper {
 
-    Usuario aDominio(UsuarioEntity entity);
+    Usuario toDominio(UsuarioEntity entity);
 
-    UsuarioEntity aEntity(Usuario dominio);
+    UsuarioEntity toEntity(Usuario dominio);
 }

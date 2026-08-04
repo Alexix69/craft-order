@@ -5,7 +5,7 @@ import com.classic.craftorder.dominio.entidades.Usuario;
 import com.classic.craftorder.dominio.repositorios.IUsuarioRepositorio;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 public class UsuarioUseCaseImpl implements IUsuarioUseCase {
 
@@ -21,8 +21,9 @@ public class UsuarioUseCaseImpl implements IUsuarioUseCase {
     }
 
     @Override
-    public Optional<Usuario> buscarPorId(Long id) {
-        return usuarioRepositorio.buscarPorId(id);
+    public Usuario buscarPorId(Long id) {
+        return usuarioRepositorio.buscarPorId(id)
+                .orElseThrow(() -> new NoSuchElementException("Usuario no encontrado con id: " + id));
     }
 
     @Override

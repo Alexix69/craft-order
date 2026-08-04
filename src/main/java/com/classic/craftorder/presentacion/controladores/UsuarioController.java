@@ -6,6 +6,7 @@ import com.classic.craftorder.presentacion.dto.request.UsuarioRequestDto;
 import com.classic.craftorder.presentacion.dto.response.UsuarioResponseDto;
 import com.classic.craftorder.presentacion.mapeadores.IUsuarioDtoMapper;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,33 +21,26 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
+@RequiredArgsConstructor
 public class UsuarioController {
 
     private final IUsuarioUseCase usuarioUseCase;
     private final IUsuarioDtoMapper mapper;
 
-    public UsuarioController(IUsuarioUseCase usuarioUseCase, IUsuarioDtoMapper mapper) {
-        this.usuarioUseCase = usuarioUseCase;
-        this.mapper = mapper;
-    }
-
     @PostMapping
     public ResponseEntity<UsuarioResponseDto> guardar(@Valid @RequestBody UsuarioRequestDto requestDto) {
-        Usuario usuario = usuarioUseCase.guardar(mapper.aDominio(requestDto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.aResponseDto(usuario));
+        Usuario usuario = usuarioUseCase.guardar(mapper.toDominio(requestDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(usuario));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDto> buscarPorId(@PathVariable Long id) {
-        return usuarioUseCase.buscarPorId(id)
-                .map(mapper::aResponseDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public UsuarioResponseDto buscarPorId(@PathVariable Long id) {
+        return mapper.toResponse(usuarioUseCase.buscarPorId(id));
     }
 
     @GetMapping
     public List<UsuarioResponseDto> listarTodos() {
-        return usuarioUseCase.listarTodos().stream().map(mapper::aResponseDto).toList();
+        return usuarioUseCase.listarTodos().stream().map(mapper::toResponse).toList();
     }
 
     @DeleteMapping("/{id}")

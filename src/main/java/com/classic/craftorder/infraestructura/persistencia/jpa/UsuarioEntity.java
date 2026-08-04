@@ -5,23 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDateTime;
+import lombok.Data;
 
 @Entity
 @Table(name = "usuario")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class UsuarioEntity {
+@Data
+public class UsuarioEntity extends AuditoriaBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,41 +23,25 @@ public class UsuarioEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(nullable = false)
     private String passwordHash;
 
     @Column(nullable = false)
     private String rol;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    // TODO: descomentar cuando CotizacionEntity exista
+    // @OneToMany(mappedBy = "fkUsuarioArtesanoEntity")
+    // private List<CotizacionEntity> cotizacionesComoArtesano = new ArrayList<>();
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    // TODO: descomentar cuando CotizacionEntity exista
+    // @OneToMany(mappedBy = "fkUsuarioAprobadorEntity")
+    // private List<CotizacionEntity> cotizacionesComoAprobador = new ArrayList<>();
 
-    // Pendiente hasta que CotizacionEntity exista (relacion x2: creador y aprobador)
-    // @OneToMany(mappedBy = "usuarioCreador")
-    // private List<CotizacionEntity> cotizacionesCreadas;
-    //
-    // @OneToMany(mappedBy = "usuarioAprobador")
-    // private List<CotizacionEntity> cotizacionesAprobadas;
+    // TODO: descomentar cuando OrdenProduccionEntity exista
+    // @OneToMany(mappedBy = "fkUsuarioEntity")
+    // private List<OrdenProduccionEntity> ordenesProduccion = new ArrayList<>();
 
-    // Pendiente hasta que OrdenProduccionEntity exista
-    // @OneToMany(mappedBy = "usuario")
-    // private List<OrdenProduccionEntity> ordenesProduccion;
-
-    // Pendiente hasta que HistorialEstadoEntity exista
-    // @OneToMany(mappedBy = "usuario")
-    // private List<HistorialEstadoEntity> historialEstados;
-
-    @PrePersist
-    protected void alCrear() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void alActualizar() {
-        this.updatedAt = LocalDateTime.now();
-    }
+    // TODO: descomentar cuando HistorialEstadoEntity exista
+    // @OneToMany(mappedBy = "fkUsuarioEntity")
+    // private List<HistorialEstadoEntity> historialEstados = new ArrayList<>();
 }
