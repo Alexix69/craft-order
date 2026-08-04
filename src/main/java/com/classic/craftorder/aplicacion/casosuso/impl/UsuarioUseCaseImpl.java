@@ -2,7 +2,9 @@ package com.classic.craftorder.aplicacion.casosuso.impl;
 
 import com.classic.craftorder.aplicacion.casosuso.entrada.IUsuarioUseCase;
 import com.classic.craftorder.dominio.PaginaResultado;
+import com.classic.craftorder.dominio.entidades.OrdenProduccion;
 import com.classic.craftorder.dominio.entidades.Usuario;
+import com.classic.craftorder.dominio.repositorios.IOrdenProduccionRepositorio;
 import com.classic.craftorder.dominio.repositorios.IUsuarioRepositorio;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -19,11 +21,14 @@ public class UsuarioUseCaseImpl implements IUsuarioUseCase {
 
     private final IUsuarioRepositorio usuarioRepositorio;
     private final BCryptPasswordEncoder encoder;
+    private final IOrdenProduccionRepositorio ordenProduccionRepositorio;
     private final SecureRandom random = new SecureRandom();
 
-    public UsuarioUseCaseImpl(IUsuarioRepositorio usuarioRepositorio, BCryptPasswordEncoder encoder) {
+    public UsuarioUseCaseImpl(IUsuarioRepositorio usuarioRepositorio, BCryptPasswordEncoder encoder,
+                               IOrdenProduccionRepositorio ordenProduccionRepositorio) {
         this.usuarioRepositorio = usuarioRepositorio;
         this.encoder = encoder;
+        this.ordenProduccionRepositorio = ordenProduccionRepositorio;
     }
 
     @Override
@@ -59,6 +64,19 @@ public class UsuarioUseCaseImpl implements IUsuarioUseCase {
 
     @Override
     public void desactivar(Long id) {
+        List<OrdenProduccion> ordenesActivas =
+            ordenProduccionRepositorio.listarPorArtesano(id)
+                .stream()
+                .filter(o -> !"LISTO_ENTREGA".equals(o.getEstadoActual()))
+                .toList();
+
+        if (!ordenesActivas.isEmpty()) {
+            throw new RuntimeException(
+                "No se puede desactivar este artesano porque tiene " +
+                ordenesActivas.size() +
+                " orden(es) activa(s). Reasigna las órdenes antes de desactivarlo.");
+        }
+
         usuarioRepositorio.desactivar(id);
     }
 

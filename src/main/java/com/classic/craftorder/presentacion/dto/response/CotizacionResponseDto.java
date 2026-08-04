@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Data
 public class CotizacionResponseDto {
@@ -29,4 +30,6 @@ public class CotizacionResponseDto {
     private String motivoRechazo;
     private String token;
     private OffsetDateTime createdAt;
+    private List<HistorialOrdenResponseDto> historialOrden;
+    private String estadoOrden;
 }

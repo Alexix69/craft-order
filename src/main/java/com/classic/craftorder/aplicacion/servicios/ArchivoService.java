@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.util.Map;
 
 @Component
-public class ImagenService {
+public class ArchivoService {
 
     private final Cloudinary cloudinary;
 
-    public ImagenService(Cloudinary cloudinary) {
+    public ArchivoService(Cloudinary cloudinary) {
         this.cloudinary = cloudinary;
     }
 
@@ -29,6 +29,23 @@ public class ImagenService {
             return (String) uploadResult.get("secure_url");
         } catch (IOException e) {
             throw new RuntimeException("Error al subir la imagen: " + e.getMessage());
+        }
+    }
+
+    public String subirArchivo(byte[] contenido, String nombrePublico) {
+        try {
+            Map uploadResult = cloudinary.uploader().upload(
+                contenido,
+                ObjectUtils.asMap(
+                    "folder", "craft-order/facturas",
+                    "resource_type", "raw",
+                    "public_id", nombrePublico
+                )
+            );
+            return (String) uploadResult.get("secure_url");
+        } catch (IOException e) {
+            throw new RuntimeException(
+                "Error al subir el PDF a Cloudinary: " + e.getMessage());
         }
     }
 }
