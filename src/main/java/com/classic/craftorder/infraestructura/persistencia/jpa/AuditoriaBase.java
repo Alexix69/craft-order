@@ -15,7 +15,6 @@ public abstract class AuditoriaBase {
     @PrePersist
     protected void alCrear() {
         this.createdAt = OffsetDateTime.now();
-        this.updatedAt = OffsetDateTime.now();
     }
 
     @PreUpdate
