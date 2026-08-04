@@ -1,7 +1,7 @@
 package com.classic.craftorder.presentacion.controladores;
 
 import com.classic.craftorder.aplicacion.casosuso.entrada.ITipoMuebleUseCase;
-import com.classic.craftorder.aplicacion.servicios.ImagenService;
+import com.classic.craftorder.aplicacion.servicios.ArchivoService;
 import com.classic.craftorder.dominio.PaginaResultado;
 import com.classic.craftorder.dominio.entidades.TipoMueble;
 import com.classic.craftorder.presentacion.dto.request.TipoMuebleRequestDto;
@@ -31,14 +31,14 @@ public class TipoMuebleController {
 
     private final ITipoMuebleUseCase tipoMuebleUseCase;
     private final ITipoMuebleDtoMapper mapper;
-    private final ImagenService imagenService;
+    private final ArchivoService archivoService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<TipoMuebleResponseDto> guardar(
             @Valid @ModelAttribute TipoMuebleRequestDto requestDto,
             @RequestParam(value = "imagenFile", required = false) MultipartFile imagenFile) {
         if (imagenFile != null && !imagenFile.isEmpty()) {
-            requestDto.setFotoUrl(imagenService.subirImagen(imagenFile));
+            requestDto.setFotoUrl(archivoService.subirImagen(imagenFile));
         }
         TipoMueble tipoMueble = tipoMuebleUseCase.guardar(mapper.toDominio(requestDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(tipoMueble));
@@ -50,7 +50,7 @@ public class TipoMuebleController {
             @Valid @ModelAttribute TipoMuebleRequestDto requestDto,
             @RequestParam(value = "imagenFile", required = false) MultipartFile imagenFile) {
         if (imagenFile != null && !imagenFile.isEmpty()) {
-            requestDto.setFotoUrl(imagenService.subirImagen(imagenFile));
+            requestDto.setFotoUrl(archivoService.subirImagen(imagenFile));
         }
         TipoMueble tipoMueble = tipoMuebleUseCase.actualizar(id, mapper.toDominio(requestDto));
         return mapper.toResponse(tipoMueble);
