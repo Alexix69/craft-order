@@ -1,6 +1,7 @@
 package com.classic.craftorder.aplicacion.casosuso.impl;
 
 import com.classic.craftorder.aplicacion.casosuso.entrada.IOrdenProduccionUseCase;
+import com.classic.craftorder.aplicacion.servicios.ArchivoService;
 import com.classic.craftorder.aplicacion.servicios.CorreoService;
 import com.classic.craftorder.aplicacion.servicios.FacturaPdfService;
 import com.classic.craftorder.dominio.entidades.Cotizacion;
@@ -36,6 +37,7 @@ public class OrdenProduccionUseCaseImpl implements IOrdenProduccionUseCase {
     private final IUsuarioRepositorio usuarioRepositorio;
     private final FacturaPdfService facturaPdfService;
     private final CorreoService correoService;
+    private final ArchivoService archivoService;
 
     public OrdenProduccionUseCaseImpl(IOrdenProduccionRepositorio ordenRepositorio,
                                        IHistorialOrdenRepositorio historialRepositorio,
@@ -45,7 +47,8 @@ public class OrdenProduccionUseCaseImpl implements IOrdenProduccionUseCase {
                                        IMaterialRepositorio materialRepositorio,
                                        IUsuarioRepositorio usuarioRepositorio,
                                        FacturaPdfService facturaPdfService,
-                                       CorreoService correoService) {
+                                       CorreoService correoService,
+                                       ArchivoService archivoService) {
         this.ordenRepositorio = ordenRepositorio;
         this.historialRepositorio = historialRepositorio;
         this.facturaRepositorio = facturaRepositorio;
@@ -55,6 +58,7 @@ public class OrdenProduccionUseCaseImpl implements IOrdenProduccionUseCase {
         this.usuarioRepositorio = usuarioRepositorio;
         this.facturaPdfService = facturaPdfService;
         this.correoService = correoService;
+        this.archivoService = archivoService;
     }
 
     @Override
@@ -256,8 +260,11 @@ public class OrdenProduccionUseCaseImpl implements IOrdenProduccionUseCase {
 
         Factura guardada = facturaRepositorio.guardar(factura);
 
+        byte[] pdfBytes = null;
         try {
-            String pdfUrl = facturaPdfService.generarYSubir(guardada, cotizacion);
+            pdfBytes = facturaPdfService.generarBytes(guardada, cotizacion);
+            String pdfUrl = archivoService.subirArchivo(pdfBytes,
+                "factura-" + guardada.getNumeroFactura());
             guardada.setPdfUrl(pdfUrl);
             facturaRepositorio.guardar(guardada);
         } catch (Exception e) {
@@ -268,6 +275,8 @@ public class OrdenProduccionUseCaseImpl implements IOrdenProduccionUseCase {
         correoService.enviarListoEntrega(
             cotizacion.getCorreoCliente(),
             cotizacion.getNombreCliente(),
-            cotizacion.getToken());
+            cotizacion.getToken(),
+            pdfBytes,
+            guardada.getNumeroFactura());
     }
 }
