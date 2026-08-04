@@ -5,6 +5,7 @@ import com.classic.craftorder.aplicacion.casosuso.entrada.IOrdenProduccionUseCas
 import com.classic.craftorder.aplicacion.casosuso.entrada.ITipoMuebleUseCase;
 import com.classic.craftorder.dominio.entidades.Cotizacion;
 import com.classic.craftorder.dominio.entidades.OrdenProduccion;
+import com.classic.craftorder.dominio.repositorios.IFacturaRepositorio;
 import com.classic.craftorder.presentacion.dto.response.CotizacionResponseDto;
 import org.springframework.stereotype.Component;
 
@@ -18,17 +19,20 @@ public class CotizacionDtoEnriquecedor {
     private final IMaterialUseCase materialUseCase;
     private final IOrdenProduccionUseCase ordenProduccionUseCase;
     private final IOrdenProduccionDtoMapper ordenDtoMapper;
+    private final IFacturaRepositorio facturaRepositorio;
 
     public CotizacionDtoEnriquecedor(ICotizacionDtoMapper mapper,
             ITipoMuebleUseCase tipoMuebleUseCase,
             IMaterialUseCase materialUseCase,
             IOrdenProduccionUseCase ordenProduccionUseCase,
-            IOrdenProduccionDtoMapper ordenDtoMapper) {
+            IOrdenProduccionDtoMapper ordenDtoMapper,
+            IFacturaRepositorio facturaRepositorio) {
         this.mapper = mapper;
         this.tipoMuebleUseCase = tipoMuebleUseCase;
         this.materialUseCase = materialUseCase;
         this.ordenProduccionUseCase = ordenProduccionUseCase;
         this.ordenDtoMapper = ordenDtoMapper;
+        this.facturaRepositorio = facturaRepositorio;
     }
 
     public CotizacionResponseDto toResponse(Cotizacion cotizacion) {
@@ -54,6 +58,8 @@ public class CotizacionDtoEnriquecedor {
             dto.setHistorialOrden(
                     ordenProduccionUseCase.listarHistorial(orden.getId()).stream()
                             .map(ordenDtoMapper::toResponse).toList());
+            facturaRepositorio.buscarPorOrdenId(orden.getId())
+                    .ifPresent(factura -> dto.setPdfUrl(factura.getPdfUrl()));
         } catch (Exception e) {
             dto.setEstadoOrden(null);
             dto.setHistorialOrden(null);

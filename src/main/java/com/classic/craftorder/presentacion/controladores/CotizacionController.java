@@ -1,8 +1,10 @@
 package com.classic.craftorder.presentacion.controladores;
 
 import com.classic.craftorder.aplicacion.casosuso.entrada.ICotizacionUseCase;
+import com.classic.craftorder.aplicacion.casosuso.entrada.IOrdenProduccionUseCase;
 import com.classic.craftorder.dominio.PaginaResultado;
 import com.classic.craftorder.dominio.entidades.Cotizacion;
+import com.classic.craftorder.dominio.entidades.OrdenProduccion;
 import com.classic.craftorder.presentacion.dto.request.AprobacionRequestDto;
 import com.classic.craftorder.presentacion.dto.request.CotizacionRequestDto;
 import com.classic.craftorder.presentacion.dto.request.RechazoRequestDto;
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/cotizaciones")
 @RequiredArgsConstructor
@@ -31,6 +36,7 @@ public class CotizacionController {
     private final ICotizacionUseCase cotizacionUseCase;
     private final ICotizacionDtoMapper dtoMapper;
     private final CotizacionDtoEnriquecedor enriquecedor;
+    private final IOrdenProduccionUseCase ordenProduccionUseCase;
 
     @PostMapping("/calcular")
     public ResponseEntity<CotizacionResponseDto> calcular(
@@ -55,6 +61,31 @@ public class CotizacionController {
             @PathVariable String token) {
         return ResponseEntity.ok(
                 enriquecedor.toResponse(cotizacionUseCase.buscarPorToken(token)));
+    }
+
+    @GetMapping("/buscar/{token}")
+    public ResponseEntity<Map<String, Object>> buscarPorToken(
+            @PathVariable String token) {
+        try {
+            Cotizacion cotizacion = cotizacionUseCase.buscarPorToken(token);
+            Map<String, Object> resultado = new HashMap<>();
+            resultado.put("cotizacionId", cotizacion.getId());
+            resultado.put("estado", cotizacion.getEstado());
+
+            try {
+                OrdenProduccion orden = ordenProduccionUseCase
+                        .buscarPorCotizacionId(cotizacion.getId());
+                resultado.put("tieneOrden", true);
+                resultado.put("ordenId", orden.getId());
+            } catch (Exception e) {
+                resultado.put("tieneOrden", false);
+                resultado.put("ordenId", null);
+            }
+
+            return ResponseEntity.ok(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping
