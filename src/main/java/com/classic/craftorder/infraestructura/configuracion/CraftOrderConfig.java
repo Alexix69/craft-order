@@ -55,67 +55,67 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class CraftOrderConfig {
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
+    BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public IUsuarioRepositorio usuarioRepositorio(IUsuarioJpaRepositorio jpaRepositorio,
-                                                   IUsuarioJpaMapper mapper) {
+    IUsuarioRepositorio usuarioRepositorio(IUsuarioJpaRepositorio jpaRepositorio,
+            IUsuarioJpaMapper mapper) {
         return new UsuarioRepositorioImpl(jpaRepositorio, mapper);
     }
 
     @Bean
-    public IUsuarioUseCase usuarioUseCase(
+    IUsuarioUseCase usuarioUseCase(
             IUsuarioRepositorio repositorio,
             BCryptPasswordEncoder encoder,
             IOrdenProduccionRepositorio ordenProduccionRepositorio) {
         return new UsuarioUseCaseImpl(repositorio, encoder,
-            ordenProduccionRepositorio);
+                ordenProduccionRepositorio);
     }
 
     @Bean
-    public ITipoMuebleRepositorio tipoMuebleRepositorio(ITipoMuebleJpaRepositorio jpaRepositorio,
-                                                         ITipoMuebleJpaMapper mapper) {
+    ITipoMuebleRepositorio tipoMuebleRepositorio(ITipoMuebleJpaRepositorio jpaRepositorio,
+            ITipoMuebleJpaMapper mapper) {
         return new TipoMuebleRepositorioImpl(jpaRepositorio, mapper);
     }
 
     @Bean
-    public ITipoMuebleUseCase tipoMuebleUseCase(ITipoMuebleRepositorio repositorio) {
+    ITipoMuebleUseCase tipoMuebleUseCase(ITipoMuebleRepositorio repositorio) {
         return new TipoMuebleUseCaseImpl(repositorio);
     }
 
     @Bean
-    public IMaterialRepositorio materialRepositorio(IMaterialJpaRepositorio jpaRepositorio,
-                                                     IMaterialJpaMapper mapper) {
+    IMaterialRepositorio materialRepositorio(IMaterialJpaRepositorio jpaRepositorio,
+            IMaterialJpaMapper mapper) {
         return new MaterialRepositorioImpl(jpaRepositorio, mapper);
     }
 
     @Bean
-    public IMaterialUseCase materialUseCase(IMaterialRepositorio repositorio) {
+    IMaterialUseCase materialUseCase(IMaterialRepositorio repositorio) {
         return new MaterialUseCaseImpl(repositorio);
     }
 
     @Bean
-    public ITipoAcabadoRepositorio tipoAcabadoRepositorio(ITipoAcabadoJpaRepositorio jpaRepositorio,
-                                                           ITipoAcabadoJpaMapper mapper) {
+    ITipoAcabadoRepositorio tipoAcabadoRepositorio(ITipoAcabadoJpaRepositorio jpaRepositorio,
+            ITipoAcabadoJpaMapper mapper) {
         return new TipoAcabadoRepositorioImpl(jpaRepositorio, mapper);
     }
 
     @Bean
-    public ITipoAcabadoUseCase tipoAcabadoUseCase(ITipoAcabadoRepositorio repositorio) {
+    ITipoAcabadoUseCase tipoAcabadoUseCase(ITipoAcabadoRepositorio repositorio) {
         return new TipoAcabadoUseCaseImpl(repositorio);
     }
 
     @Bean
-    public ICotizacionRepositorio cotizacionRepositorio(
+    ICotizacionRepositorio cotizacionRepositorio(
             ICotizacionJpaRepositorio jpaRepositorio,
             ICotizacionJpaMapper mapper) {
         return new CotizacionRepositorioImpl(jpaRepositorio, mapper);
     }
 
     @Bean
-    public ICotizacionUseCase cotizacionUseCase(
+    ICotizacionUseCase cotizacionUseCase(
             ICotizacionRepositorio cotizacionRepositorio,
             ITipoMuebleRepositorio tipoMuebleRepositorio,
             IMaterialRepositorio materialRepositorio,
@@ -130,28 +130,28 @@ public class CraftOrderConfig {
     }
 
     @Bean
-    public IOrdenProduccionRepositorio ordenProduccionRepositorio(
+    IOrdenProduccionRepositorio ordenProduccionRepositorio(
             IOrdenProduccionJpaRepositorio jpaRepositorio,
             IOrdenProduccionJpaMapper mapper) {
         return new OrdenProduccionRepositorioImpl(jpaRepositorio, mapper);
     }
 
     @Bean
-    public IHistorialOrdenRepositorio historialOrdenRepositorio(
+    IHistorialOrdenRepositorio historialOrdenRepositorio(
             IHistorialOrdenJpaRepositorio jpaRepositorio,
             IHistorialOrdenJpaMapper mapper) {
         return new HistorialOrdenRepositorioImpl(jpaRepositorio, mapper);
     }
 
     @Bean
-    public IFacturaRepositorio facturaRepositorio(
+    IFacturaRepositorio facturaRepositorio(
             IFacturaJpaRepositorio jpaRepositorio,
             IFacturaJpaMapper mapper) {
         return new FacturaRepositorioImpl(jpaRepositorio, mapper);
     }
 
     @Bean
-    public IOrdenProduccionUseCase ordenProduccionUseCase(
+    IOrdenProduccionUseCase ordenProduccionUseCase(
             IOrdenProduccionRepositorio ordenRepositorio,
             IHistorialOrdenRepositorio historialRepositorio,
             IFacturaRepositorio facturaRepositorio,

@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    container_name: craftorder_db
+    environment:
+      POSTGRES_DB: craftorder
+      POSTGRES_USER: craftorder
+      POSTGRES_PASSWORD: craftorder2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - craftorder_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  craftorder_data:
