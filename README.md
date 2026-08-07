@@ -40,7 +40,7 @@ craft-order/
 
 El proyecto usa valores por defecto en `application.properties` que funcionan directamente con el Docker Compose incluido. No se requiere configuración adicional para levantar el sistema.
 
-> ⚠️ **Nota importante:** Si descargaste el proyecto desde el archivo RAR, encontrarás un archivo `.env` en la raíz con los valores reales de Cloudinary y Resend ya configurados. Estos valores son temporales y serán anulados después del período de revisión.
+> ℹ️ **Nota:** Los valores por defecto en `application.properties` son suficientes para levantar el sistema completo sin configuración adicional, tanto si descargaste el proyecto desde GitHub como desde el archivo RAR de entrega.
 
 Para el flujo de notificaciones por correo, el sistema usa [Resend](https://resend.com). Si deseas probar el envío de correos con tu propia cuenta, crea una cuenta gratuita en resend.com, obtén tu API key y reemplaza el valor de `RESEND_API_KEY` en el `application.properties`.
 
